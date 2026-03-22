@@ -61,3 +61,75 @@ if (quiz && quizResult) {
     quizResult.style.color = '#7ce8ad';
   });
 }
+
+// Theme and Font Size Management
+const themeToggle = document.getElementById('themeToggle');
+const fontIncrementBtn = document.getElementById('fontIncrement');
+const fontDecrementBtn = document.getElementById('fontDecrement');
+const htmlElement = document.documentElement;
+
+// Load saved preferences
+function loadPreferences() {
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  const savedFontSize = localStorage.getItem('fontSize') || 'normal';
+  
+  if (savedTheme === 'light') {
+    htmlElement.classList.add('light-theme');
+    if (themeToggle) themeToggle.textContent = '☀️';
+  }
+  
+  if (savedFontSize === 'sm') {
+    htmlElement.classList.add('font-sm');
+  } else if (savedFontSize === 'lg') {
+    htmlElement.classList.add('font-lg');
+  }
+}
+
+// Theme Toggle
+if (themeToggle) {
+  themeToggle.addEventListener('click', () => {
+    htmlElement.classList.toggle('light-theme');
+    const isLight = htmlElement.classList.contains('light-theme');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    themeToggle.textContent = isLight ? '☀️' : '🌙';
+  });
+}
+
+// Font Size Controls
+if (fontIncrementBtn && fontDecrementBtn) {
+  fontIncrementBtn.addEventListener('click', () => {
+    const current = htmlElement.className;
+    htmlElement.classList.remove('font-sm', 'font-lg');
+    if (current.includes('font-sm')) {
+      htmlElement.classList.remove('font-sm');
+      localStorage.setItem('fontSize', 'normal');
+    } else if (!current.includes('font-lg')) {
+      htmlElement.classList.add('font-lg');
+      localStorage.setItem('fontSize', 'lg');
+    } else {
+      htmlElement.classList.add('font-lg');
+      localStorage.setItem('fontSize', 'lg');
+    }
+  });
+
+  fontDecrementBtn.addEventListener('click', () => {
+    const current = htmlElement.className;
+    htmlElement.classList.remove('font-sm', 'font-lg');
+    if (current.includes('font-lg')) {
+      htmlElement.classList.remove('font-lg');
+      localStorage.setItem('fontSize', 'normal');
+    } else if (!current.includes('font-sm')) {
+      htmlElement.classList.add('font-sm');
+      localStorage.setItem('fontSize', 'sm');
+    } else {
+      htmlElement.classList.add('font-sm');
+      localStorage.setItem('fontSize', 'sm');
+    }
+  });
+}
+
+// Initialize preferences on page load
+loadPreferences();
+if (themeToggle) {
+  themeToggle.textContent = htmlElement.classList.contains('light-theme') ? '☀️' : '🌙';
+}
